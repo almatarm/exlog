@@ -1,34 +1,29 @@
 package com.almatarm.exlog
 
 import android.os.Bundle
-import android.support.design.widget.BottomNavigationView
-import android.support.design.widget.FloatingActionButton
-import android.support.design.widget.Snackbar
+import android.support.design.widget.*
 import android.support.v4.view.GravityCompat
 import android.support.v7.app.ActionBarDrawerToggle
 import android.view.MenuItem
 import android.support.v4.widget.DrawerLayout
-import android.support.design.widget.NavigationView
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.Toolbar
 import android.view.Menu
 import android.widget.TextView
+import com.almatarm.exlog.ui.main.SectionsPagerAdapter
+import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private lateinit var textMessage: TextView
     private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
         when (item.itemId) {
-            R.id.navigation_home -> {
-                textMessage.setText(R.string.title_home)
+            R.id.navigation_workout -> {
+                view_pager.currentItem = 0
                 return@OnNavigationItemSelectedListener true
             }
-            R.id.navigation_dashboard -> {
-                textMessage.setText(R.string.title_dashboard)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_notifications -> {
-                textMessage.setText(R.string.title_notifications)
+            R.id.navigation_exercises -> {
+                view_pager.currentItem = 1
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -42,11 +37,6 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val fab: FloatingActionButton = findViewById(R.id.fab)
-        fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
         val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
         val navView: NavigationView = findViewById(R.id.nav_view)
         val toggle = ActionBarDrawerToggle(
@@ -60,8 +50,15 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val tabNav: BottomNavigationView = findViewById(R.id.tab_nav)
 
-        textMessage = findViewById(R.id.message)
         tabNav.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
+
+
+        val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
+
+        val viewPager: ViewPager = findViewById(R.id.view_pager)
+        viewPager.adapter = sectionsPagerAdapter
+
+
     }
 
     override fun onBackPressed() {
