@@ -8,61 +8,41 @@ import android.view.MenuItem
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.view.Menu
-import android.widget.TextView
 import com.almatarm.exlog.ui.main.SectionsPagerAdapter
+import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.app_bar_main.*
 import kotlinx.android.synthetic.main.content_main.*
 
 class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.navigation_workout -> {
-                view_pager.currentItem = 0
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.navigation_exercises -> {
-                view_pager.currentItem = 1
-                return@OnNavigationItemSelectedListener true
-            }
-        }
-        false
-    }
-
-
+    //*************************************************************************
+    // Life cycle functions
+    //*************************************************************************
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val toolbar: Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
 
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        //// Setup Drawer
         val toggle = ActionBarDrawerToggle(
             this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
         )
         drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
-
         navView.setNavigationItemSelectedListener(this)
 
-
-        val tabNav: BottomNavigationView = findViewById(R.id.tab_nav)
-
-        tabNav.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
-
-
+        //// Setup Tabs
+        tabNavView.setOnNavigationItemSelectedListener(onNavigationItemSelectedListener)
         val sectionsPagerAdapter = SectionsPagerAdapter(this, supportFragmentManager)
-
-        val viewPager: ViewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
-
-
     }
 
+    //*************************************************************************
+    // Other functions
+    //*************************************************************************
     override fun onBackPressed() {
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START)
         } else {
@@ -70,6 +50,9 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+    //*************************************************************************
+    // Options Menu
+    //*************************************************************************
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.main, menu)
@@ -86,6 +69,28 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
+
+    //*************************************************************************
+    // Navigation Menu (Tabbed)
+    //*************************************************************************
+    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
+        when (item.itemId) {
+            R.id.navigation_workout -> {
+                viewPager.currentItem = 0
+                return@OnNavigationItemSelectedListener true
+            }
+            R.id.navigation_exercises -> {
+                viewPager.currentItem = 1
+                return@OnNavigationItemSelectedListener true
+            }
+        }
+        false
+    }
+
+
+    //*************************************************************************
+    // Drawer Menu
+    //*************************************************************************
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         // Handle navigation view item clicks here.
         when (item.itemId) {
@@ -108,7 +113,7 @@ class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
             }
         }
-        val drawerLayout: DrawerLayout = findViewById(R.id.drawer_layout)
+        val drawerLayout: DrawerLayout = findViewById(R.id.drawerLayout)
         drawerLayout.closeDrawer(GravityCompat.START)
         return true
     }
